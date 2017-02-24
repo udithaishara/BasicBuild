@@ -1,0 +1,58 @@
+# Boxstarter options
+$Boxstarter.RebootOk=$true # Allow reboots?
+$Boxstarter.NoPassword=$False # Is this a machine with no login password?
+$Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a reboot
+
+# Set PS Execution Policy to Unrestricted
+Update-ExecutionPolicy Unrestricted -Force
+
+# Enable RemoteDesktop
+Enable-RemoteDesktop
+
+# Set AC Power Sleep Settings to "Never"
+POWERCFG -change -standby-timeout-ac 0
+
+# Install Boxstarter
+choco install boxstarter
+
+
+
+# Install Standard Applications
+cinst 7zip.install
+cinst adobereader
+# cinst ccleaner
+cinst dotnet4.6.2
+cinst firefox
+cinst googlechrome 
+cinst jre8
+cinst silverlight
+
+
+
+
+# Create Directory "C:\Temp\BoxStarterDownloads"
+MD "C:\Temp"
+MD "C:\Temp\BoxStarterDownloads"
+
+
+# Install Teamviewer 10
+wget "http://download.teamviewer.com/download/version_10x/TeamViewer_Setup.exe" -UseBasicParsing -OutFile "C:\Temp\BoxStarterDownloads\TeamViewer_Setup10.exe"
+C:\Temp\BoxStarterDownloads\TeamViewer_Setup10.exe /S
+
+
+if (Test-PendingReboot) { Invoke-Reboot }
+
+
+# Download Windows 10 Upgrade Utility
+wget "https://download.microsoft.com/download/0/4/7/047889D0-578C-4A44-A38F-7F30A6CB3809/current-version/Windows10Upgrade9252.exe" -UseBasicParsing -OutFile "$HOME\Desktop\Windows10Upgrade9252.exe"
+
+# Install Chocolatey
+cinst chocolatey
+
+# Set Chocolatey Features
+choco feature enable -n allowGlobalConfirmation
+choco feature enable -n allowEmptyChecksums
+
+# Set Chocolatey Features (old cmdlets)
+#$allowEmptyChecksums = $env:ChocolateyAllowEmptyChecksums
+#$allowEmptyChecksumsSecure = $env:ChocolateyAllowEmptyChecksumsSecure
